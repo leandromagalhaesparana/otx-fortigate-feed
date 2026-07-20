@@ -1,1 +1,43 @@
+name: Update AlienVault OTX feed
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-feed:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: python -m pip install requests
+
+      - name: Gerar feed do AlienVault OTX
+        env:
+          OTX_API_KEY: ${{ secrets.OTX_API_KEY }}
+        run: python scripts/generate_feed.py
+
+      - name: Publicar arquivo atualizado
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add feed/otx-ipv4.txt
+
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteracao encontrada."
+          else
+            git commit -m "Update AlienVault OTX feed"
+            git push
+          fi
