@@ -1,5 +1,5 @@
 # AlienVault OTX IPv4 Threat Feed
-# Updated UTC: 2026-08-16T18:32:12Z
+# Updated UTC: 2026-08-16T23:33:25Z
 # Entries: 630
 2.24.131.246
 2.26.98.67
